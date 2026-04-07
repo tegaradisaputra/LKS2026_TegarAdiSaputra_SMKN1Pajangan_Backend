@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRequest extends FormRequest
+class UpdateInstallmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,13 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             //
-            'name' => '|max:255',
-            'email' => 'required|',
-            'password' => 'required|min:6',
-            'role' => 'required'
+            'installment_number' => 'required|ineger',
+            'jatuh_tempo' => 'required',
+            'nominal_pokok' => 'required',
+            'nominal_bunga' => 'required',
+            'total_cicilan' => 'required',
+            'status' => 'required',
+            'paid_at' => 'required'
         ];
     }
 }

@@ -35,15 +35,15 @@ class UserController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $storeUserRequest, User $user)
+    public function store(StoreUserRequest $storeUserRequest)
     {
         //
         try {
-            $user->create($storeUserRequest);    
+            $data = User::create($storeUserRequest);    
 
             return response()->json([
                 'status' => true,
-                'data' => $user,
+                'data' => $data,
             ], 200);
         } catch (\ErrorException $e) {
             return response()->json([
@@ -81,11 +81,11 @@ class UserController
     {
         //
         try {
-            $user->update($updateUserRequest);
+            $data = $user->update($updateUserRequest);
 
             return response()->json([
                 'status' => true,
-                'data' => $user
+                'data' => $data
             ], 200);
         } catch (\ErrorException $e) {
             return response()->json([
