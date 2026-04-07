@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Error;
 use Illuminate\Http\Request;
@@ -15,36 +17,39 @@ class UserController
     {
         //
         try {
-            $data = User::all();
+            $data = User::all()->groupBy('id', 'asc');
 
             return response()->json([
                 'status' => true,
                 'data' => $data,
             ], 200);
 
-        } catch (\Throwable $e) {
-            dd(throw new Error($e));
-            // return response()->json([
-            //     'status' => false,
-            //     'message' => throw new Error($e)
-            // ]);
+        } catch (\ErrorException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => throw new Error($e)
+            ], 404);
         }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(User $user)
+    public function store(StoreUserRequest $storeUserRequest, User $user)
     {
         //
         try {
-            User::create();
+            $user->create($storeUserRequest);    
 
             return response()->json([
-
-            ]);
-        } catch (\Throwable $th) {
-            //throw $th;
+                'status' => true,
+                'data' => $user,
+            ], 200);
+        } catch (\ErrorException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => throw new Error($e)
+            ], 400);
         }
     }
 
@@ -54,19 +59,40 @@ class UserController
     public function show(User $user)
     {
         //
-        $data = User::findOrFail();
+        try {
+            $data = User::findOrFail($user);
 
-        return response()->json([
-
-        ]);
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+            ], 200);
+        } catch (\ErrorException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => throw new Error($e)
+            ], 400);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $updateUserRequest, User $user)
     {
         //
+        try {
+            $user->update($updateUserRequest);
+
+            return response()->json([
+                'status' => true,
+                'data' => $user
+            ], 200);
+        } catch (\ErrorException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => throw new Error($e)
+            ], 400);
+        }
     }
 
     /**
@@ -75,5 +101,17 @@ class UserController
     public function destroy(User $user)
     {
         //
+        try {
+            $user->delete();
+
+            return response()->json([
+                'status' => true
+            ], 200);
+        } catch (\ErrorException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => throw new Error($e)
+            ], 400);
+        }
     }
 }
