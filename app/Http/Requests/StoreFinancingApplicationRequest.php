@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreInstallmentRequest extends FormRequest
+class StoreFinancingApplicationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,16 @@ class StoreInstallmentRequest extends FormRequest
     {
         return [
             //
-            'installment_number' => 'required|ineger',
-            'jatuh_tempo' => 'required|min:30',
-            'nominal_pokok' => 'required',
-            'nominal_bunga' => 'required',
-            'total_cicilan' => 'required',
+            'jumlah_pembiayaan' => 'required|min:',
+            'tenor_bulan' => 'required',
+            'tujuan_pembiayaan' => 'required',
+            'skor_kelayakan' => 'required',
+            'rekomendasi_limit' => 'required',
+            'catatan_analisis' => 'required',
             'status' => 'required',
-            'paid_at' => 'required'
+            'submitted_at' => 'required',
+            'approved_at' => 'required',
+            'rejected_reason' => 'required',
         ];
     }
 }

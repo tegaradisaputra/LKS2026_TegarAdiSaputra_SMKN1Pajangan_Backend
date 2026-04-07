@@ -91,7 +91,7 @@ class InstallmentsController
             return response()->json([
                 'status' => 400,
                 'message' => throw new Error($e)
-            ])
+            ]);
         }
     }
 
