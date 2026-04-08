@@ -12,7 +12,7 @@ class StoreAplicationLogsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,6 +24,11 @@ class StoreAplicationLogsRequest extends FormRequest
     {
         return [
             //
+            'status_from' => 'required',
+            'status_to' => 'required',
+            'role' => 'required',
+            'user_id' => 'required',
+            'notes' => 'required'
         ];
     }
 }

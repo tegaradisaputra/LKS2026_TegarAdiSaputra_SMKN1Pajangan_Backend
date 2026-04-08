@@ -12,7 +12,7 @@ class UpdateAplicationLogsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,6 +24,11 @@ class UpdateAplicationLogsRequest extends FormRequest
     {
         return [
             //
+            'status_from' => 'somtimes|required',
+            'status_to' => 'somtimes|required',
+            'role' => 'somtimes|required',
+            'user_id' => 'somtimes|required',
+            'notes' => 'somtimes|required'
         ];
     }
 }

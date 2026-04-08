@@ -12,7 +12,7 @@ class UpdateBusinessVerificationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,6 +24,12 @@ class UpdateBusinessVerificationRequest extends FormRequest
     {
         return [
             //
+            'nama_usaha' => 'somtimes|required',
+            'nib' => 'somtimes|required',
+            'npwp' => 'somtimes|required',
+            'omzet_bulanan' => 'somtimes|required',
+            'jumlah_karyawan' => 'somtimes|required',
+            'lama_usaha_tahun' => 'somtimes|required'
         ];
     }
 }
