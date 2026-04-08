@@ -24,16 +24,16 @@ class UpdateFinancingApplicationRequest extends FormRequest
     {
         return [
             //
-            'jumlah_pembiayaan' => 'required|min:',
-            'tenor_bulan' => 'required',
-            'tujuan_pembiayaan' => 'required',
-            'skor_kelayakan' => 'required',
-            'rekomendasi_limit' => 'required',
-            'catatan_analisis' => 'required',
-            'status' => 'required',
-            'submitted_at' => 'required',
-            'approved_at' => 'required',
-            'rejected_reason' => 'required',
+            'jumlah_pembiayaan' => 'somtimes|required|min:',
+            'tenor_bulan' => 'somtimes|required',
+            'tujuan_pembiayaan' => 'somtimes|required',
+            'skor_kelayakan' => 'somtimes|required',
+            'rekomendasi_limit' => 'somtimes|required',
+            'catatan_analisis' => 'somtimes|required',
+            'status' => 'somtimes|required',
+            'submitted_at' => 'somtimes|required',
+            'approved_at' => 'somtimes|required',
+            'rejected_reason' => 'somtimes|required',
         ];
     }
 }

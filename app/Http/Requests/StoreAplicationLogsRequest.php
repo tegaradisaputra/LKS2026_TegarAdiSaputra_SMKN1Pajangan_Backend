@@ -5,14 +5,14 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateInstallmentRequest extends FormRequest
+class StoreAplicationLogsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,13 +24,6 @@ class UpdateInstallmentRequest extends FormRequest
     {
         return [
             //
-            'installment_number' => 'somtimes|required|ineger',
-            'jatuh_tempo' => 'somtimes|required',
-            'nominal_pokok' => 'somtimes|required',
-            'nominal_bunga' => 'somtimes|required',
-            'total_cicilan' => 'somtimes|required',
-            'status' => 'somtimes|required',
-            'paid_at' => 'somtimes|required'
         ];
     }
 }

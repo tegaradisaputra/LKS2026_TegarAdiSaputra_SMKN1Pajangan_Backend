@@ -24,10 +24,10 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             //
-            'name' => '|max:255',
-            'email' => 'required|',
-            'password' => 'required|min:6',
-            'role' => 'required'
+            'name' => 'somtimes|max:255',
+            'email' => 'somtimes|required',
+            'password' => 'somtimes|required|min:6',
+            'role' => 'somtimes|required'
         ];
     }
 }

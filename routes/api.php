@@ -9,4 +9,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::apiResource('user', UserController::class, );
+Route::apiResource('users', UserController::class);
+Route::apiResource('business-verifications', UserController::class);
+Route::apiResource('financing-applications', UserController::class);
+Route::apiResource('installments', UserController::class);
+Route::apiResource('application-logs', UserController::class);

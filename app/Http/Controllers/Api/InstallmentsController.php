@@ -7,8 +7,9 @@ use App\Http\Requests\UpdateInstallmentRequest;
 use App\Models\Installments;
 use Error;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
-class InstallmentsController
+class InstallmentsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,17 +18,18 @@ class InstallmentsController
     {
         //
         try {
-            $data = Installments::all()->groupBy('installment_number', 'asc');
+            $data = Installments::groupBy('installment_number', 'asc')->get();
 
             return response()->json([
                 'status' => true,
+                'message' => 'get all data success',
                 'data' => $data
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => true,
-                'message' => throw new Error($e)
-            ], 400);
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -42,13 +44,14 @@ class InstallmentsController
 
             return response()->json([
                 'status' => true,
+                'message' => 'create data success',
                 'data' => $data
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => throw new Error($e)
-            ], 400);
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -59,17 +62,16 @@ class InstallmentsController
     {
         //
         try {
-            $data = Installments::findOrFail($installments);
-            
             return response()->json([
                 'status' => true,
-                'data' => $data
+                'message' => 'get detail data success',
+                'data' => $installments
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => throw new Error($e)
-            ], 400);
+                'message' => $e->getMessage()
+            ], 500);
         }
 
     }
@@ -77,20 +79,21 @@ class InstallmentsController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateInstallmentRequest $updateInstallment, Installments $installments)
+    public function update(UpdateInstallmentRequest $request, Installments $installments)
     {
         //
         try {
-            $data = $installments->update($UpdateInstallmentRequest);
+            $installments->update($request->validated());
 
             return response()->json([
                 'status' => true,
-                'data' => $data
+                'message' => 'update data success',
+                'data' => $installments
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
-                'status' => 400,
-                'message' => throw new Error($e)
+                'status' => 500,
+                'message' => $e->getMessage()
             ]);
         }
     }
@@ -102,16 +105,17 @@ class InstallmentsController
     {
         //
         try {
-            $user->delete();
+            $installments->delete();
 
             return response()->json([
-                'status' => true
+                'status' => true,
+                'message' => 'delete data success'
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => throw new Error($e)
-            ], 400);
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 }

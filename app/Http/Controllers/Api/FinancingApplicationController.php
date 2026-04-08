@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreFinancingApplicationRequest;
 use App\Http\Requests\UpdateFinancingApplicationRequest;
 use App\Models\FinancingApplications;
-use Error;
-use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
-class FinancingApplicationController
+class FinancingApplicationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,38 +16,40 @@ class FinancingApplicationController
     {
         //
         try {
-            $data = FinancingApplications::all();
+            $data = FinancingApplications::groupBy('user_id', 'asc')->get;
 
             return response()->json([
                 'status' => true,
+                'message' => 'get all data success',
                 'data' => $data
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => throw new Error($e)
-            ], 400);
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFinancingApplicationRequest $storeFinancingApplication)
+    public function store(StoreFinancingApplicationRequest $request)
     {
         //
         try {
-            $data = FinancingApplications::create($storeFinancingApplication);
+            $data = FinancingApplications::create($request->validated());
 
             return response()->json([
                 'status' => true,
+                'message' => 'create data success',
                 'data' => $data
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => throw new Error($e)
-            ], 400);
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -59,38 +60,38 @@ class FinancingApplicationController
     {
         //
         try {
-            $data = FinancingApplications::findOrFail();
-
             return response()->json([
                 'status' => true,
-                'data' => $data
+                'message' => 'get detail data success',
+                'data' => $financingApplications
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => throw new Error($e)
-            ], 400);
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFinancingApplicationRequest $updateFinancingApplication, FinancingApplications $financingApplications)
+    public function update(UpdateFinancingApplicationRequest $request, FinancingApplications $financingApplications)
     {
         //
         try {
-            $data = $financingApplications->update($updateFinancingApplication);
+            $financingApplications->update($request->validated);
 
             return response()->json([
                 'status' => true,
-                'data' => $data
+                'message' => 'update data success',
+                'data' => $financingApplications
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => throw new Error($e)
-            ], 400);
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -104,13 +105,14 @@ class FinancingApplicationController
             $financingApplications->delete();
 
             return response()->json([
-                'status' => true
+                'status' => true,
+                'message' => 'delete data success'
             ], 200);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => throw new Error($e)
-            ], 400);
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 }
