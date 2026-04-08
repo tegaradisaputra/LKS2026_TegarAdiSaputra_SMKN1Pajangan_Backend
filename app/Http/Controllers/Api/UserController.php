@@ -17,7 +17,7 @@ class UserController extends Controller
     {
         //
         try {
-            $data = User::groupBy('id', 'asc')->get();
+            $data = User::all();
 
             return response()->json([
                 'status' => true,
@@ -40,7 +40,8 @@ class UserController extends Controller
     {
         //
         try {
-            $data = User::create($request->validated());    
+            $data = User::create($request->validated()); 
+            $data['password']->crypt();
 
             return response()->json([
                 'status' => true,

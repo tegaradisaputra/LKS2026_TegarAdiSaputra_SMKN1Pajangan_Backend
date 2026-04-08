@@ -17,7 +17,7 @@ class ApplicationLogsController extends Controller
     {
         //
         try {
-            $data = ApplicationLogs::groupBy('user_id', 'asc')->get;
+            $data = ApplicationLogs::groupBy('financing_application_id', 'asc')->get;
 
             return response()->json([
                 'status' => true,
@@ -45,7 +45,7 @@ class ApplicationLogsController extends Controller
                 'status' => true,
                 'message' => 'create data success',
                 'data' => $data
-            ], 200);
+            ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,

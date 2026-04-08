@@ -24,7 +24,7 @@ class InstallmentsController extends Controller
                 'status' => true,
                 'message' => 'get all data success',
                 'data' => $data
-            ], 200);
+            ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => true,

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('business_verifications', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->id('id');
 
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 

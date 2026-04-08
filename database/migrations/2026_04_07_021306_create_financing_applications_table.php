@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('financing_applications', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->id('id');
 
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('business_verification_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('business_verifications_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->bigInteger('jumlah_pembiayaan');
             $table->integer('tenor_bulan');

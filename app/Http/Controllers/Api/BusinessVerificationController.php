@@ -45,7 +45,7 @@ class BusinessVerificationController extends Controller
                 'status' => true,
                 'message' => 'create data success',
                 'data' => $data
-            ], 200);
+            ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
