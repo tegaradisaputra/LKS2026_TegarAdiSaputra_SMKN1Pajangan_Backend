@@ -18,7 +18,7 @@ class InstallmentsController extends Controller
     {
         //
         try {
-            $data = Installments::groupBy('installment_number', 'asc')->get();
+            $data = Installments::orderBy('installment_number', 'asc')->get();
 
             return response()->json([
                 'status' => true,
@@ -29,24 +29,24 @@ class InstallmentsController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => $e->getMessage()
-            ], 500);
+            ], 404);
         }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreInstallmentRequest $storeInstallment, )
+    public function store(StoreInstallmentRequest $request)
     {
         //
         try {
-            $data = Installments::create($storeInstallment);
+            $data = Installments::create($request->validated());
 
             return response()->json([
                 'status' => true,
                 'message' => 'create data success',
                 'data' => $data
-            ], 200);
+            ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
@@ -58,14 +58,14 @@ class InstallmentsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Installments $installments)
+    public function show(Installments $installment)
     {
         //
         try {
             return response()->json([
                 'status' => true,
                 'message' => 'get detail data success',
-                'data' => $installments
+                'data' => $installment
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -79,16 +79,16 @@ class InstallmentsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateInstallmentRequest $request, Installments $installments)
+    public function update(UpdateInstallmentRequest $request, Installments $installment)
     {
         //
         try {
-            $installments->update($request->validated());
+            $installment->update($request->validated());
 
             return response()->json([
                 'status' => true,
                 'message' => 'update data success',
-                'data' => $installments
+                'data' => $installment
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -101,11 +101,11 @@ class InstallmentsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Installments $installments)
+    public function destroy(Installments $installment)
     {
         //
         try {
-            $installments->delete();
+            $installment->delete();
 
             return response()->json([
                 'status' => true,

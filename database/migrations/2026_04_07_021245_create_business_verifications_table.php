@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('business_verifications', function (Blueprint $table) {
             $table->id('id');
 
-            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->string('nama_usaha');
             $table->string('nib');
@@ -23,9 +23,9 @@ return new class extends Migration
             $table->integer('jumlah_karyawan');
             $table->integer('lama_usaha_tahun');
             $table->enum('status',['draft', 'submitted', 'verified', 'rejected']);
-            $table->text('rejected_season')->nullable();
+            $table->text('rejected_reason')->nullable();
 
-            $table->foreignId('verified_by')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('verified_by')->nullable()->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();

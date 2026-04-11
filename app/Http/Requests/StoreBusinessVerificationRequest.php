@@ -24,6 +24,7 @@ class StoreBusinessVerificationRequest extends FormRequest
     {
         return [
             //
+            'user_id' => 'required|exists:users,id',
             'nama_usaha' => 'required',
             'nib' => 'required',
             'npwp' => 'required',

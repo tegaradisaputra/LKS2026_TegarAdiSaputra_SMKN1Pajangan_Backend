@@ -17,7 +17,7 @@ class ApplicationLogsController extends Controller
     {
         //
         try {
-            $data = ApplicationLogs::groupBy('financing_application_id', 'asc')->get;
+            $data = ApplicationLogs::orderBy('financing_application_id', 'asc')->get();
 
             return response()->json([
                 'status' => true,
@@ -57,14 +57,14 @@ class ApplicationLogsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ApplicationLogs $applicationLogs)
+    public function show(ApplicationLogs $applicationLog)
     {
         //
         try {
             return response()->json([
                 'status' => true,
                 'message' => 'get detail data success',
-                'data' => $applicationLogs
+                'data' => $applicationLog
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -77,16 +77,16 @@ class ApplicationLogsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAplicationLogsRequest $request, ApplicationLogs $applicationLogs)
+    public function update(UpdateAplicationLogsRequest $request, ApplicationLogs $applicationLog)
     {
         //
         try {
-            $applicationLogs->update($request->validated);
+            $applicationLog->update($request->validated());
 
             return response()->json([
                 'status' => true,
                 'message' => 'update data success',
-                'data' => $applicationLogs
+                'data' => $applicationLog
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -99,11 +99,11 @@ class ApplicationLogsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ApplicationLogs $applicationLogs)
+    public function destroy(ApplicationLogs $applicationLog)
     {
         //
         try {
-            $applicationLogs->delete();
+            $applicationLog->delete();
 
             return response()->json([
                 'status' => true,

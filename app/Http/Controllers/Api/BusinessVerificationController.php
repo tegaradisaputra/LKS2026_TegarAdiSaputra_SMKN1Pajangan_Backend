@@ -17,7 +17,7 @@ class BusinessVerificationController extends Controller
     {
         //
         try {
-            $data = BusinessVerifications::groupBy('nama_usaha', 'asc')->get;
+            $data = BusinessVerifications::orderBy('nama_usaha', 'asc')->get();
 
             return response()->json([
                 'status' => true,
@@ -57,14 +57,14 @@ class BusinessVerificationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(BusinessVerifications $businessVerifications)
+    public function show(BusinessVerifications $businessVerification)
     {
         //
         try {
             return response()->json([
                 'status' => true,
                 'message' => 'get detail data success',
-                'data' => $businessVerifications
+                'data' => $businessVerification
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -77,16 +77,16 @@ class BusinessVerificationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBusinessVerificationRequest $request, BusinessVerifications $businessVerifications)
+    public function update(UpdateBusinessVerificationRequest $request, BusinessVerifications $businessVerification)
     {
         //
         try {
-            $businessVerifications->update($request->validated);
+            $businessVerification->update($request->validated());
 
             return response()->json([
                 'status' => true,
                 'message' => 'update data success',
-                'data' => $businessVerifications
+                'data' => $businessVerification
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -99,11 +99,11 @@ class BusinessVerificationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BusinessVerifications $businessVerifications)
+    public function destroy(BusinessVerifications $businessVerification)
     {
         //
         try {
-            $businessVerifications->delete();
+            $businessVerification->delete();
 
             return response()->json([
                 'status' => true,

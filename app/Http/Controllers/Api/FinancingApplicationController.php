@@ -16,7 +16,7 @@ class FinancingApplicationController extends Controller
     {
         //
         try {
-            $data = FinancingApplications::groupBy('user_id', 'asc')->get;
+            $data = FinancingApplications::orderBy('user_id', 'asc')->get();
 
             return response()->json([
                 'status' => true,
@@ -44,7 +44,7 @@ class FinancingApplicationController extends Controller
                 'status' => true,
                 'message' => 'create data success',
                 'data' => $data
-            ], 200);
+            ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
@@ -56,14 +56,14 @@ class FinancingApplicationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(FinancingApplications $financingApplications)
+    public function show(FinancingApplications $financingApplication)
     {
         //
         try {
             return response()->json([
                 'status' => true,
                 'message' => 'get detail data success',
-                'data' => $financingApplications
+                'data' => $financingApplication
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -76,16 +76,16 @@ class FinancingApplicationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFinancingApplicationRequest $request, FinancingApplications $financingApplications)
+    public function update(UpdateFinancingApplicationRequest $request, FinancingApplications $financingApplication)
     {
         //
         try {
-            $financingApplications->update($request->validated);
+            $financingApplication->update($request->validated());
 
             return response()->json([
                 'status' => true,
                 'message' => 'update data success',
-                'data' => $financingApplications
+                'data' => $financingApplication
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -98,11 +98,11 @@ class FinancingApplicationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FinancingApplications $financingApplications)
+    public function destroy(FinancingApplications $financingApplication)
     {
         //
         try {
-            $financingApplications->delete();
+            $financingApplication->delete();
 
             return response()->json([
                 'status' => true,

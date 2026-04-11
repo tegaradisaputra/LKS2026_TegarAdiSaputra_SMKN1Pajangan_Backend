@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class UserController extends Controller
@@ -17,7 +16,7 @@ class UserController extends Controller
     {
         //
         try {
-            $data = User::all();
+            $data = User::orderBy('id', 'asc')->get();
 
             return response()->json([
                 'status' => true,
@@ -41,8 +40,7 @@ class UserController extends Controller
         //
         try {
             $data = User::create($request->validated()); 
-            $data['password']->crypt();
-
+            
             return response()->json([
                 'status' => true,
                 'message' => 'create data success',
