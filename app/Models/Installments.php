@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Installments extends Model
 {
     //
-    use HasUuid, HasFactory, SoftDeletes;
+    use HasUuids, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'financing_application_id',
