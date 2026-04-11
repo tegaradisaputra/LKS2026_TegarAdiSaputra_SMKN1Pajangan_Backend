@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('financing_applications', function (Blueprint $table) {
-            $table->id('id');
+            $table->uuid('id')->primary();
 
-            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('business_verifications_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('business_verifications_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->bigInteger('jumlah_pembiayaan');
             $table->integer('tenor_bulan');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('skor_kelayakan')->nullable();
             $table->bigInteger('rekomendasi_limit')->nullable();
             $table->string('catatan_analisis')->nullable();
-            $table->enum('status', ['submitted, under_riview, recomended, rejected_by_analyst, approved, rejected_by_manager'])->nullable();
+            $table->enum('status', ['submitted', 'under_review', 'recommended', 'rejected_by_analyst', 'approved', 'rejected_by_manager'])->nullable();
             $table->timestamp('submitted_at');
             $table->timestamp('approved_at')->nullable();
             $table->string('rejected_reason')->nullable();

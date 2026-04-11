@@ -4,9 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FinancingApplications extends Model
@@ -29,12 +27,9 @@ class FinancingApplications extends Model
         'rejected_reason',
     ];
 
-    public function installments(): BelongsTo {
-        return $this->belongsTo(Installments::class);
-    }
-
-    public function installment(): HasOne {
-        return $this->hasOne(Installments::class);
+    public function installments()
+    {
+        return $this->hasMany(Installments::class, 'financing_application_id');
     }
 
     public function logs(): HasMany {

@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('application_logs', function (Blueprint $table) {
-            $table->id('id');
+            $table->uuid('id')->primary();
 
-            $table->foreignId('financing_application_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('financing_application_id')->constrained('financing_applications')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->string('status_from');
             $table->string('status_to');
             $table->string('role');
-            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('notes')->nullable();
 
             $table->timestamps();

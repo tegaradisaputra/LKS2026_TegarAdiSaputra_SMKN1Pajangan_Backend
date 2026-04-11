@@ -21,7 +21,8 @@ class ApplicationLogs extends Model
         'notes'
     ];
 
-    public function financingApplication(): HasOne {
-        return $this->hasOne(FinancingApplications::class);
+    public function financingApplication()
+    {
+        return $this->belongsTo(FinancingApplications::class, 'financing_application_id');
     }
 }

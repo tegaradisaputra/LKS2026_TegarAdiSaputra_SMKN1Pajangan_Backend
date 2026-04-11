@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BusinessVerifications extends Model
@@ -28,11 +26,8 @@ class BusinessVerifications extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function financingApplication(): HasOne {
-        return $this->hasOne(FinancingApplications::class);
-    }
-
-    public function installments(): HasMany {
-        return $this->hasMany(Installments::class);
+    public function financingApplications()
+    {
+        return $this->hasMany(FinancingApplications::class, 'business_verification_id');
     }
 }

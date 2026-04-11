@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Installments extends Model
@@ -24,11 +22,8 @@ class Installments extends Model
         'paid_at',
     ];
 
-    public function businessVerifications(): BelongsTo {
-        return $this->belongsTo(BusinessVerifications::class);
-    }
-
-    public function financingApplications(): HasOne {
-        return $this->hasOne(FinancingApplications::class);
+    public function financingApplication()
+    {
+        return $this->belongsTo(FinancingApplications::class, 'financing_application_id');
     }
 }
