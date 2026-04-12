@@ -8,20 +8,33 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::prefix('v1')->group(function () {
 
-// Auth
-Route::post('/register', RegisterController::class);
-Route::post('/login', LoginController::class);
-Route::post('/logout', LogoutController::class)->middleware('auth:sanctum');
+    // Authentication routes
+    Route::post('auth/register', RegisterController::class);
+    Route::post('auth/login', LoginController::class);
 
-Route::apiResource('/users', UserController::class);
-Route::apiResource('/business-verifications', BusinessVerificationController::class);
-Route::apiResource('/financing-applications', FinancingApplicationController::class);
-Route::apiResource('/installments', InstallmentsController::class);
-Route::apiResource('/application-logs', ApplicationLogsController::class);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('auth/logout', LogoutController::class);
+
+        // Resource routes
+
+        // Business Verification
+        Route::apiResource('business-verifications', BusinessVerificationController::class)
+            ->only(['index', 'store', 'show']);
+        Route::patch('business-verifications/{businessVerification}/approve', [BusinessVerificationController::class, 'approve']);
+        
+        // Financing Application
+        Route::apiResource('financing-applications', FinancingApplicationController::class)
+            ->only(['index', 'store', 'show']);
+        Route::patch('financing-applications/{financingApplication}/analyze', [FinancingApplicationController::class, 'analyze']);
+        Route::patch('financing-applications/{financingApplication}/approve', [FinancingApplicationController::class, 'approve']);
+
+        // Nested resource for installments under financing applications - read only
+        Route::apiResource('financing-applications/{financingApplication}/installments', [InstallmentsController::class, 'index']);
+        Route::apiResource('financing-applications/{financingApplication}/logs', [ApplicationLogsController::class, 'index']);
+
+    });
+});

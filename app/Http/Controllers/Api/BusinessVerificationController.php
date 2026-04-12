@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreBusinessVerificationRequest;
 use App\Http\Requests\UpdateBusinessVerificationRequest;
 use App\Models\BusinessVerifications;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class BusinessVerificationController extends Controller

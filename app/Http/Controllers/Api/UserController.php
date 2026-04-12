@@ -4,24 +4,31 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use UserService;
 
 class UserController extends Controller
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         //
         try {
-            $data = User::orderBy('id', 'asc')->get();
+            $users = $this->userService->getAllUsers();
 
             return response()->json([
                 'status' => true,
                 'message' => 'get all data success',
-                'data' => $data,
+                'data' => $users,
             ], 200);
 
         } catch (\Exception $e) {
@@ -35,16 +42,16 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request): JsonResponse
     {
         //
         try {
-            $data = User::create($request->validated()); 
+            $user = $this->userService->storeUser($request->validated());
             
             return response()->json([
                 'status' => true,
                 'message' => 'create data success',
-                'data' => $data,
+                'data' => $user,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -57,10 +64,12 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(int $id): JsonResponse
     {
         //
         try {
+            $user = $this->userService->showUser($id);
+
             return response()->json([
                 'status' => true,
                 'message' => 'get detail data success',
@@ -77,11 +86,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, int $id): JsonResponse
     {
         //
         try {
-            $user->update($request->validated());
+            $user = $this->userService->updateUser((int) $id, $request->validated());
 
             return response()->json([
                 'status' => true,
@@ -99,11 +108,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(int $id): JsonResponse
     {
         //
         try {
-            $user->delete();
+            $this->userService->deleteUser($id);
 
             return response()->json([
                 'status' => true,
