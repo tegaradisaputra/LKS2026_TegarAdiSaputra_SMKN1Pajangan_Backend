@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('financing_applications', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->foreignUuid('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignUuid('business_verifications_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('business_verifications_id')->constrained('business_verifications')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->bigInteger('jumlah_pembiayaan');
             $table->integer('tenor_bulan');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('skor_kelayakan')->nullable();
             $table->bigInteger('rekomendasi_limit')->nullable();
             $table->string('catatan_analisis')->nullable();
-            $table->enum('status', ['submitted', 'under_review', 'recommended', 'rejected_by_analyst', 'approved', 'rejected_by_manager'])->nullable();
+            $table->enum('status', ['submitted', 'under_review', 'recommended', 'rejected_by_analyst', 'approved', 'rejected_by_manager'])->default('submitted');
             $table->timestamp('submitted_at');
             $table->timestamp('approved_at')->nullable();
             $table->string('rejected_reason')->nullable();
