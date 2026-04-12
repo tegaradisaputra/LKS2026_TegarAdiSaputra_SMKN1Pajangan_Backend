@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\ApplicationLogsController;
 use App\Http\Controllers\Api\BusinessVerificationController;
 use App\Http\Controllers\Api\FinancingApplicationController;
 use App\Http\Controllers\Api\InstallmentsController;
-use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -33,8 +32,8 @@ Route::prefix('v1')->group(function () {
         Route::patch('financing-applications/{financingApplication}/approve', [FinancingApplicationController::class, 'approve']);
 
         // Nested resource for installments under financing applications - read only
-        Route::apiResource('financing-applications/{financingApplication}/installments', [InstallmentsController::class, 'index']);
-        Route::apiResource('financing-applications/{financingApplication}/logs', [ApplicationLogsController::class, 'index']);
+        Route::get('financing-applications/{financingApplication}/installments', [InstallmentsController::class, 'index']);
+        Route::get('financing-applications/{financingApplication}/logs', [ApplicationLogsController::class, 'index']);
 
     });
 });
