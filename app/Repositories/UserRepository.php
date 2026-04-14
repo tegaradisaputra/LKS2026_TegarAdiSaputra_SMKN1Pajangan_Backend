@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repositories;
 
 use App\Models\User;
-use App\Repository\Contracts\UserRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository implements UserRepositoryInterface
@@ -13,7 +13,7 @@ class UserRepository implements UserRepositoryInterface
         // Implementasi logika untuk mendapatkan semua pengguna
         return User::orderBy('id', 'asc')->get();
     }
-    public function findById(int $id): ?User
+    public function findById(string $id): ?User
     {
         return User::find($id);
     }
@@ -22,14 +22,14 @@ class UserRepository implements UserRepositoryInterface
         // Implementasi logika untuk membuat pengguna baru
         return User::create($data);
     }
-    public function update(int $id, array $data): User
+    public function update(string $id, array $data): User
     {
         // Implementasi logika untuk memperbarui pengguna
         $user = User::findOrFail($id);
         $user->update($data);
         return $user;
     }
-    public function delete(int $id): User
+    public function delete(string $id): User
     {
         // Implementasi logika untuk menghapus pengguna
         $user = User::findOrFail($id);

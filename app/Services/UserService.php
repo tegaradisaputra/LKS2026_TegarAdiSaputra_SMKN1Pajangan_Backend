@@ -1,6 +1,6 @@
 <?php
 
-use App\Repository\Contracts\UserRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 
 class UserService
 {
@@ -11,31 +11,31 @@ class UserService
         $this->userRepo = $userRepo;
     }
 
-    public function getAllUsers()
+    public function getAll()
     {
         // Implementasi logika untuk mendapatkan semua pengguna
         return $this->userRepo->all();
     }
 
-    public function storeUser(array $data)
+    public function store(array $data)
     {
         // Implementasi logika untuk membuat pengguna baru
         return $this->userRepo->create($data);
     }
 
-    public function showUser(int $id)
+    public function show(string $id)
     {
         // Implementasi logika untuk menampilkan detail pengguna
         return $this->userRepo->findById($id);
     }
 
-    public function updateUser(int $id, array $data)
+    public function update(string $id, array $data)
     {
         // Implementasi logika untuk memperbarui pengguna
         return $this->userRepo->update($id, $data);
     }
 
-    public function deleteUser(int $id)
+    public function delete(string $id)
     {
         // Implementasi logika untuk menghapus pengguna
         return $this->userRepo->delete($id);

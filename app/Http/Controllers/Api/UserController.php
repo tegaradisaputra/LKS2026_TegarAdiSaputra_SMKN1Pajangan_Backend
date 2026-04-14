@@ -23,7 +23,7 @@ class UserController extends Controller
     {
         //
         try {
-            $users = $this->userService->getAllUsers();
+            $users = $this->userService->getAll();
 
             return response()->json([
                 'status' => true,
@@ -46,7 +46,7 @@ class UserController extends Controller
     {
         //
         try {
-            $user = $this->userService->storeUser($request->validated());
+            $user = $this->userService->store($request->validated());
             
             return response()->json([
                 'status' => true,
@@ -68,7 +68,7 @@ class UserController extends Controller
     {
         //
         try {
-            $user = $this->userService->showUser($id);
+            $user = $this->userService->show($id);
 
             return response()->json([
                 'status' => true,
@@ -90,7 +90,7 @@ class UserController extends Controller
     {
         //
         try {
-            $user = $this->userService->updateUser((int) $id, $request->validated());
+            $user = $this->userService->update((int) $id, $request->validated());
 
             return response()->json([
                 'status' => true,
@@ -112,7 +112,7 @@ class UserController extends Controller
     {
         //
         try {
-            $this->userService->deleteUser($id);
+            $this->userService->delete($id);
 
             return response()->json([
                 'status' => true,
