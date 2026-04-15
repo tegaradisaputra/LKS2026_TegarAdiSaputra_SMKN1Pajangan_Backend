@@ -90,7 +90,7 @@ class UserController extends Controller
     {
         //
         try {
-            $user = $this->userService->update((int) $id, $request->validated());
+            $user = $this->userService->update($id, $request->validated());
 
             return response()->json([
                 'status' => true,

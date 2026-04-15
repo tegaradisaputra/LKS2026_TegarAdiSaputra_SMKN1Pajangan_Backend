@@ -5,23 +5,40 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreFinancingApplicationRequest;
 use App\Http\Requests\UpdateFinancingApplicationRequest;
 use App\Models\FinancingApplications;
+use App\Services\ApplicationLogService;
+use App\Services\FinancingApplicationService;
+use App\Services\InstallmentService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class FinancingApplicationController extends Controller
 {
+    protected $financingApplicationService;
+    protected $installmentService;
+    protected $ApplicationLogService;
+
+    public function __construct(
+        FinancingApplicationService $financingApplicationService,
+        InstallmentService $installmentService,
+        ApplicationLogService $applicationLogService
+    )
+    {
+        $this->financingApplicationService = $financingApplicationService;
+        $this->installmentService = $installmentService;
+        $this->ApplicationLogService = $applicationLogService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         //
         try {
-            $data = FinancingApplications::orderBy('user_id', 'asc')->get();
-
             return response()->json([
                 'status' => true,
                 'message' => 'get all data success',
-                'data' => $data
+                'data' => $this->financingApplicationService->getAll()
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -34,16 +51,20 @@ class FinancingApplicationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFinancingApplicationRequest $request)
+    public function store(StoreFinancingApplicationRequest $request): JsonResponse
     {
         //
         try {
-            $data = FinancingApplications::create($request->validated());
+            $data = array_merge($request->validated([
+                'user_id' => auth()->id(),
+                'submited_at' => now(),
+                'status' => 'submitted'
+            ]));
 
             return response()->json([
                 'status' => true,
                 'message' => 'create data success',
-                'data' => $data
+                'data' => $this->financingApplicationService->store($data)
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -56,15 +77,97 @@ class FinancingApplicationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(FinancingApplications $financingApplication)
+    public function show(string $id): JsonResponse
     {
         //
         try {
             return response()->json([
                 'status' => true,
                 'message' => 'get detail data success',
-                'data' => $financingApplication
+                'data' => $this->financingApplicationService->show($id)
             ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function analyze(Request $request, string $id): JsonResponse
+    {
+        try {
+            $statusFrom = $this->financingApplicationService->show($id)->status();
+            $data = array_merge($request->validated(), ['status' => 'under_review']);
+            $updated = $this->financingApplicationService->analyze($id, $data);
+
+            $this->financingApplicationService->log(
+                $id, $statusFrom, 'under_review', 'analyst', auth()->id(), $request->input('catatan_analisis')
+            );
+
+            return response()->json([
+                'status' => true,
+                'message' => 'analyze success',
+                'data' => $updated
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function approve(Request $request, string $id): JsonResponse
+    {
+        try {
+            $application = $this->financingApplicationService->show($id);
+            $statusFrom = $application->status;
+
+            if($request->input('action') === 'approve'){
+                $data = [
+                    'status' => 'approved',
+                    'approved_at' => now()
+                ];
+
+                $updated = $this->$financingApplicationService->approve($id, $data);
+
+                // generete cicilan otomatis
+                $this->financingApplicationService->generate(
+                    $id,
+                    $application->jumlah_pembiayaan,
+                    $application->tenor_bulan
+                );
+
+                $this->installmentService->log(
+                    $id,
+                    $statusFrom,
+                    'approved',
+                    'manager',
+                    auth()->id()
+                );
+            } else {
+                $data = [
+                    'status' => 'rejected_by_manager',
+                    'rejected_reason' => $request->input('reason')
+                ];
+
+                $this->ApplicationLogService->log(
+                    $id,
+                    $statusFrom,
+                    'rejected_by_manager',
+                    'manager',
+                    auth()->id(),
+                    $request->input('reason')
+                );
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'approve success',
+                    'data' => $updated
+                ], 200);
+            }
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
@@ -76,16 +179,14 @@ class FinancingApplicationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFinancingApplicationRequest $request, FinancingApplications $financingApplication)
+    public function update(UpdateFinancingApplicationRequest $request, string $id): JsonResponse
     {
         //
         try {
-            $financingApplication->update($request->validated());
-
             return response()->json([
                 'status' => true,
                 'message' => 'update data success',
-                'data' => $financingApplication
+                'data' => $this->financingApplicationService->update($id,$request->validated())
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -98,11 +199,11 @@ class FinancingApplicationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FinancingApplications $financingApplication)
+    public function destroy(string $id): JsonResponse
     {
         //
         try {
-            $financingApplication->delete();
+            $this->financingApplicationService->delete($id);
 
             return response()->json([
                 'status' => true,

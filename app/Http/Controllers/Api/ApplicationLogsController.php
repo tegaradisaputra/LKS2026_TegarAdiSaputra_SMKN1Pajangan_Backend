@@ -3,22 +3,29 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\FinancingApplications;
+use App\Services\ApplicationLogService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
 class ApplicationLogsController extends Controller
 {
+    protected $applicationLogService;
+
+    public function __construct(ApplicationLogService $applicationLogService)
+    {
+        $this->applicationLogService = $applicationLogService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index(FinancingApplications $financingApplication)
+    public function index(FinancingApplications $financingApplication): JsonResponse
     {
         //
         try {
-            $logs = $financingApplication->orderBy('created_at', 'desc')->get();
             return response()->json([
                 'status' => true,
                 'message' => 'Get application logs success',
-                'data' => $logs
+                'data' => $this->applicationLogService->getFinancingApplication($financingApplication->id)
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

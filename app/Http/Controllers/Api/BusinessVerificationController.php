@@ -5,10 +5,19 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreBusinessVerificationRequest;
 use App\Http\Requests\UpdateBusinessVerificationRequest;
 use App\Models\BusinessVerifications;
+use App\Services\BusinessVerificationService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class BusinessVerificationController extends Controller
 {
+    protected $businessVerificationService;
+
+    public function __construct(BusinessVerificationService $businessVerificationService)
+    {
+        $this->businessVerificationService = $businessVerificationService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -16,12 +25,10 @@ class BusinessVerificationController extends Controller
     {
         //
         try {
-            $data = BusinessVerifications::orderBy('nama_usaha', 'asc')->get();
-
             return response()->json([
                 'status' => true,
                 'message' => 'get all data success',
-                'data' => $data
+                'data' => $this->businessVerificationService->getAll()
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -38,12 +45,10 @@ class BusinessVerificationController extends Controller
     {
         //
         try {
-            $data = BusinessVerifications::create($request->validated());
-
             return response()->json([
                 'status' => true,
                 'message' => 'create data success',
-                'data' => $data
+                'data' => $this->businessVerificationService->store($request->validated())
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -56,15 +61,42 @@ class BusinessVerificationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(BusinessVerifications $businessVerification)
+    public function show(string $id)
     {
         //
         try {
             return response()->json([
                 'status' => true,
                 'message' => 'get detail data success',
-                'data' => $businessVerification
+                'data' => $this->businessVerificationService->show($id)
             ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function approve(Request $request, string $id): JsonResponse
+    {
+        try {
+            $data = $request->input('reason')
+                ? [
+                    'status' => 'rejected',
+                    'rejected_reason' => $request->input('reason')
+                ]
+                : [
+                    'status' => 'verified',
+                    'verified_by' => auth()->id(),
+                    'verified_at' => now()
+                ];
+    
+                return response()->json([
+                    'status' => true,
+                    'message' => 'business verification updated success',
+                    'data' => $this->businessVerificationService->approve($id, $data)
+                ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
@@ -76,16 +108,14 @@ class BusinessVerificationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBusinessVerificationRequest $request, BusinessVerifications $businessVerification)
+    public function update(UpdateBusinessVerificationRequest $request, string $id): JsonResponse
     {
         //
         try {
-            $businessVerification->update($request->validated());
-
             return response()->json([
                 'status' => true,
                 'message' => 'update data success',
-                'data' => $businessVerification
+                'data' => $this->businessVerificationService->update($id, $request->validated())
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -98,11 +128,11 @@ class BusinessVerificationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BusinessVerifications $businessVerification)
+    public function destroy(BusinessVerifications $id)
     {
         //
         try {
-            $businessVerification->delete();
+            $this->businessVerificationService->delete($id);
 
             return response()->json([
                 'status' => true,

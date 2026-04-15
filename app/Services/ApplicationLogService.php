@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Repositories\Contracts\ApplicationLogRepositoryInterface;
 
-class InstallmentService
+class ApplicationLogService
 {
     protected $applicationLogRepo;
 

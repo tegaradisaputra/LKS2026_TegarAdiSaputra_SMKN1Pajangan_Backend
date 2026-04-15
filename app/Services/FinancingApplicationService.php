@@ -1,43 +1,40 @@
-i<?php
+<?php
+
+namespace App\Services;
 
 use App\Repositories\Contracts\BusinessVerificationRepositoryInterface;
 
-class BusinessVerificationService
+class FinancingApplicationService
 {
-    protected $businessVerificationRepo;
+    protected $financingApplicationRepo;
 
-    public function __construct(BusinessVerificationRepositoryInterface $businessVerificationRepo)
+    public function __construct(BusinessVerificationRepositoryInterface $financingApplicationRepo)
     {
-        $this->businessVerificationRepo = $businessVerificationRepo;
+        $this->financingApplicationRepo = $financingApplicationRepo;
     }
 
     public function getAll()
     {
-        // Implementasi logika untuk mendapatkan semua Business
-        return $this->businessVerificationRepo->all();
+        return $this->financingApplicationRepo->all();
     }
 
     public function store(array $data)
     {
-        // Implementasi logika untuk membuat Business baru
-        return $this->businessVerificationRepo->create($data);
+        return $this->financingApplicationRepo->create($data);
     }
 
     public function show(string $id)
     {
-        // Implementasi logika untuk menampilkan detail Business
-        return $this->businessVerificationRepo->findById($id);
+        return $this->financingApplicationRepo->findById($id);
     }
 
     public function analyze(string $id, array $data)
     {
-        // $data berisi skor_kelayakan, rekomendasi_limit, catatan_analisis, status
-        return $this->businessVerificationRepo->update($id, $data);
+        return $this->financingApplicationRepo->update($id, $data);
     }
 
     public function approve(string $id, array $data)
     {
-        // $data berisi status = approved/rejected_by_manager + rejected_reason + approved_at
-        return $this->businessVerificationRepo->update($id, $data);
+        return $this->financingApplicationRepo->update($id, $data);
     }
 }
