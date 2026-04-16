@@ -23,14 +23,16 @@ class StoreBusinessVerificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-            'user_id' => 'required|exists:users,id',
-            'nama_usaha' => 'required',
-            'nib' => 'required',
-            'npwp' => 'required',
-            'omzet_bulanan' => 'required',
-            'jumlah_karyawan' => 'required',
-            'lama_usaha_tahun' => 'required'
+            'nama_usaha' => 'required|string|max:255',
+            'alamat_usaha' => 'required|string',
+            'jenis_usaha' => 'required|string|max:255',
+            'nib' => 'required|string|max:255',
+            'npwp' => 'required|string|max:255',
+            'omset_bulanan' => 'required|numeric|min:0',
+            'lama_beroperasi' => 'required|integer|min:0',
+            'status_kepemilikan' => 'required|string|max:255',
+            'jumlah_karyawan' => 'required|integer|min:0',
+            'deskripsi_usaha' => 'required|string',
         ];
     }
 }

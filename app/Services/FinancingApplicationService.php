@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Repositories\Contracts\BusinessVerificationRepositoryInterface;
+use App\Repositories\Contracts\FinancingApplicationRepositoryInterface;
 
 class FinancingApplicationService
 {
     protected $financingApplicationRepo;
 
-    public function __construct(BusinessVerificationRepositoryInterface $financingApplicationRepo)
+    public function __construct(FinancingApplicationRepositoryInterface $financingApplicationRepo)
     {
         $this->financingApplicationRepo = $financingApplicationRepo;
     }

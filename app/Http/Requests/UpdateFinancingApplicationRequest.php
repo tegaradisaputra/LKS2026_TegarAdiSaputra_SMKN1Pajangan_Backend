@@ -23,17 +23,16 @@ class UpdateFinancingApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-            'jumlah_pembiayaan' => 'somtimes|required|min:',
-            'tenor_bulan' => 'somtimes|required',
-            'tujuan_pembiayaan' => 'somtimes|required',
-            'skor_kelayakan' => 'somtimes|required',
-            'rekomendasi_limit' => 'somtimes|required',
-            'catatan_analisis' => 'somtimes|required',
-            'status' => 'somtimes|required',
-            'submitted_at' => 'somtimes|required',
-            'approved_at' => 'somtimes|required',
-            'rejected_reason' => 'somtimes|required',
+            'jumlah_pembiayaan' => 'sometimes|numeric|min:1000000',
+            'tenor_bulan' => 'sometimes|integer|min:1|max:120',
+            'tujuan_pembiayaan' => 'sometimes|string|max:255',
+            'skor_kelayakan' => 'sometimes|numeric|min:0|max:100',
+            'rekomendasi_limit' => 'sometimes|numeric|min:0',
+            'catatan_analisis' => 'sometimes|string',
+            'status' => 'sometimes|string',
+            'submitted_at' => 'sometimes|date',
+            'approved_at' => 'sometimes|date',
+            'rejected_reason' => 'sometimes|string',
         ];
     }
 }

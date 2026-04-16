@@ -15,7 +15,7 @@ class FinancingApplications extends Model
 
     protected $fillable = [
         'user_id',
-        'business_verification_id',
+        'business_verifications_id',
         'jumlah_pembiayaan',
         'tenor_bulan',
         'tujuan_pembiayaan',

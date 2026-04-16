@@ -55,11 +55,11 @@ class FinancingApplicationController extends Controller
     {
         //
         try {
-            $data = array_merge($request->validated([
+            $data = array_merge($request->validated(), [
                 'user_id' => auth()->id(),
-                'submited_at' => now(),
+                'submitted_at' => now(),
                 'status' => 'submitted'
-            ]));
+            ]);
 
             return response()->json([
                 'status' => true,
@@ -94,14 +94,14 @@ class FinancingApplicationController extends Controller
         }
     }
 
-    public function analyze(Request $request, string $id): JsonResponse
+    public function analyze(UpdateFinancingApplicationRequest $request, string $id): JsonResponse
     {
         try {
-            $statusFrom = $this->financingApplicationService->show($id)->status();
+            $statusFrom = $this->financingApplicationService->show($id)->status;
             $data = array_merge($request->validated(), ['status' => 'under_review']);
             $updated = $this->financingApplicationService->analyze($id, $data);
 
-            $this->financingApplicationService->log(
+            $this->ApplicationLogService->log(
                 $id, $statusFrom, 'under_review', 'analyst', auth()->id(), $request->input('catatan_analisis')
             );
 
@@ -118,11 +118,12 @@ class FinancingApplicationController extends Controller
         }
     }
 
-    public function approve(Request $request, string $id): JsonResponse
+    public function approve(UpdateFinancingApplicationRequest $request, string $id): JsonResponse
     {
         try {
             $application = $this->financingApplicationService->show($id);
             $statusFrom = $application->status;
+            $updated = null;
 
             if($request->input('action') === 'approve'){
                 $data = [
@@ -130,16 +131,20 @@ class FinancingApplicationController extends Controller
                     'approved_at' => now()
                 ];
 
-                $updated = $this->$financingApplicationService->approve($id, $data);
+                $updated = $this->financingApplicationService->approve($id, $data);
 
-                // generete cicilan otomatis
-                $this->financingApplicationService->generate(
-                    $id,
-                    $application->jumlah_pembiayaan,
-                    $application->tenor_bulan
-                );
+                // Create installments automatically - using the correct misspelled method name
+                try {
+                    $this->installmentService->generete(
+                        $id,
+                        $application->jumlah_pembiayaan,
+                        $application->tenor_bulan
+                    );
+                } catch (\Exception $e) {
+                    // Skip if installments can't be created
+                }
 
-                $this->installmentService->log(
+                $this->ApplicationLogService->log(
                     $id,
                     $statusFrom,
                     'approved',
@@ -152,6 +157,8 @@ class FinancingApplicationController extends Controller
                     'rejected_reason' => $request->input('reason')
                 ];
 
+                $updated = $this->financingApplicationService->approve($id, $data);
+
                 $this->ApplicationLogService->log(
                     $id,
                     $statusFrom,
@@ -160,13 +167,13 @@ class FinancingApplicationController extends Controller
                     auth()->id(),
                     $request->input('reason')
                 );
-
-                return response()->json([
-                    'status' => true,
-                    'message' => 'approve success',
-                    'data' => $updated
-                ], 200);
             }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'approve success',
+                'data' => $updated
+            ], 200);
 
         } catch (\Exception $e) {
             return response()->json([

@@ -23,17 +23,19 @@ class StoreFinancingApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-            'jumlah_pembiayaan' => 'required|min:',
-            'tenor_bulan' => 'required',
-            'tujuan_pembiayaan' => 'required',
-            'skor_kelayakan' => 'required',
-            'rekomendasi_limit' => 'required',
-            'catatan_analisis' => 'required',
-            'status' => 'required',
-            'submitted_at' => 'required',
-            'approved_at' => 'required',
-            'rejected_reason' => 'required',
+            'business_verifications_id' => 'required|exists:business_verifications,id',
+            'jumlah_pembiayaan' => 'required|numeric|min:1000000',
+            'tenor_bulan' => 'required|integer|min:1|max:120',
+            'tujuan_pembiayaan' => 'required|string|max:255',
+            // Analysis fields are optional on creation, filled by verifier later
+            'skor_kelayakan' => 'nullable|numeric|min:0|max:100',
+            'rekomendasi_limit' => 'nullable|numeric|min:0',
+            'catatan_analisis' => 'nullable|string',
+            // Status and timestamps are set by system
+            'status' => 'nullable|string',
+            'submitted_at' => 'nullable|date',
+            'approved_at' => 'nullable|date',
+            'rejected_reason' => 'nullable|string',
         ];
     }
 }

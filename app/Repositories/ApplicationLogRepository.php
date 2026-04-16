@@ -11,7 +11,7 @@ class ApplicationLogRepository implements ApplicationLogRepositoryInterface
     public function getFinancingApplication(string $financingApplicationId): Collection
     {
         return ApplicationLogs::where('financing_application_id', $financingApplicationId)
-            ->orderBy('installment_number', 'asc')
+            ->orderBy('created_at', 'asc')
             ->get();
     }
 

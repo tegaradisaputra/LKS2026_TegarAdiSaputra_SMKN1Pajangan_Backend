@@ -28,7 +28,7 @@ class InstallmentService
         $total = $pokok + $bunga;
         $cicilanPerBulan = $total / $tenor;
 
-        for ($i = 1; i <= $tenor; $i++){
+        for ($i = 1; $i <= $tenor; $i++){
             $this->installmentRepo->create([
                 'financing_application_id' => $financingApplicationId,
                 'installment_number' => $i,
